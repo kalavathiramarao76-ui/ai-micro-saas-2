@@ -7,6 +7,7 @@ import ToolIcon from "./ToolIcon";
 import SavedList from "./SavedList";
 import FavoriteButton from "./FavoriteButton";
 import ExportMenu from "./ExportMenu";
+import ShareButton from "./ShareButton";
 import ErrorBoundary from "./ErrorBoundary";
 import ErrorFallback from "./ErrorFallback";
 import { saveGeneration, getGenerationsByTool, deleteGeneration, SavedGeneration } from "@/lib/storage";
@@ -257,6 +258,7 @@ export default function ToolLayout({
                       </>
                     )}
                   </button>
+                  <ShareButton content={output} toolName={toolName} input={lastInput} />
                   <ExportMenu content={output} toolName={toolName} />
                 </div>
               )}

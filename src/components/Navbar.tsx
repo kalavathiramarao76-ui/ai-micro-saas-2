@@ -7,6 +7,7 @@ import { getFavoritesCount } from "@/lib/favorites";
 import ThemeToggle from "./ThemeToggle";
 import CommandPalette from "./CommandPalette";
 import CollabPresence from "./CollabPresence";
+import NotificationCenter from "./NotificationCenter";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -76,6 +77,9 @@ export default function Navbar() {
               {isApp && <CollabPresence />}
 
               {isApp && <div className="mx-1 h-5 w-px" style={{ background: 'var(--border-primary)' }} />}
+
+              {/* Notification Center */}
+              {isApp && <NotificationCenter />}
 
               <ThemeToggle />
               {isApp ? (
