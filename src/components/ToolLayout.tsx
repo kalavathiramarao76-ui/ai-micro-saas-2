@@ -6,6 +6,9 @@ import Navbar from "./Navbar";
 import ToolIcon from "./ToolIcon";
 import SavedList from "./SavedList";
 import FavoriteButton from "./FavoriteButton";
+import ExportMenu from "./ExportMenu";
+import ErrorBoundary from "./ErrorBoundary";
+import ErrorFallback from "./ErrorFallback";
 import { saveGeneration, getGenerationsByTool, deleteGeneration, SavedGeneration } from "@/lib/storage";
 import { trackToolUsage } from "@/lib/favorites";
 
@@ -39,6 +42,8 @@ export default function ToolLayout({
   const [copied, setCopied] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [lastGeneration, setLastGeneration] = useState<SavedGeneration | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [lastInput, setLastInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,10 +55,12 @@ export default function ToolLayout({
       if (!input.trim() || isLoading) return;
 
       setCurrentInput(input);
+      setLastInput(input);
       setOutput("");
       setIsLoading(true);
       setIsStreaming(true);
       setLastGeneration(null);
+      setApiError(null);
 
       // Track tool usage
       trackToolUsage(toolId);
@@ -65,7 +72,16 @@ export default function ToolLayout({
           body: JSON.stringify({ toolType: toolId, input }),
         });
 
-        if (!response.ok) throw new Error("Failed to generate");
+        if (!response.ok) {
+          let errorMsg = "Failed to generate content";
+          try {
+            const errorData = await response.json();
+            errorMsg = errorData.error || errorMsg;
+          } catch {
+            // couldn't parse error response
+          }
+          throw new Error(errorMsg);
+        }
 
         const reader = response.body?.getReader();
         if (!reader) throw new Error("No reader");
@@ -112,7 +128,9 @@ export default function ToolLayout({
           setLastGeneration(gen);
         }
       } catch (err) {
-        setOutput("An error occurred while generating. Please try again.");
+        const message = err instanceof Error ? err.message : "An unexpected error occurred";
+        setApiError(message);
+        setOutput("");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -141,6 +159,7 @@ export default function ToolLayout({
   }, []);
 
   return (
+    <ErrorBoundary>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -236,6 +255,7 @@ export default function ToolLayout({
                       </>
                     )}
                   </button>
+                  <ExportMenu content={output} toolName={toolName} />
                 </div>
               )}
             </div>
@@ -243,8 +263,19 @@ export default function ToolLayout({
               ref={outputRef}
               className="max-h-[600px] min-h-[400px] overflow-y-auto p-6"
             >
-              {output ? (
-                <div className={`prose-output whitespace-pre-wrap ${isStreaming ? "streaming-cursor" : ""}`}>
+              {apiError ? (
+                <div className="flex min-h-[350px] items-center justify-center">
+                  <ErrorFallback
+                    error={apiError}
+                    onRetry={() => {
+                      if (lastInput) {
+                        handleGenerate(lastInput);
+                      }
+                    }}
+                  />
+                </div>
+              ) : output ? (
+                <div className={`prose-output whitespace-pre-wrap print-content ${isStreaming ? "streaming-cursor" : ""}`}>
                   {output}
                 </div>
               ) : (
@@ -262,5 +293,6 @@ export default function ToolLayout({
         </div>
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

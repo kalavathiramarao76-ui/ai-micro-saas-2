@@ -37,9 +37,16 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Upstream API error:", response.status, errorText);
+      const errorMessages: Record<number, string> = {
+        429: "Too many requests. Please wait a moment and try again.",
+        500: "The AI service is experiencing issues. Please try again shortly.",
+        502: "The AI service is temporarily unavailable. Please try again in a few moments.",
+        503: "The AI service is undergoing maintenance. Please try again later.",
+      };
+      const userMessage = errorMessages[response.status] || "AI service temporarily unavailable. Please try again.";
       return new Response(
-        JSON.stringify({ error: "AI service temporarily unavailable" }),
-        { status: 502, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({ error: userMessage }),
+        { status: response.status >= 500 ? 502 : response.status, headers: { "Content-Type": "application/json" } }
       );
     }
 
