@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+
+  * {
+    @apply border-zinc-800;
+  }
+
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-zinc-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-600;
+}
+
+/* Markdown output styling */
+.prose-output h1 {
+  @apply text-2xl font-bold text-zinc-100 mt-6 mb-3;
+}
+
+.prose-output h2 {
+  @apply text-xl font-semibold text-zinc-200 mt-5 mb-2;
+}
+
+.prose-output h3 {
+  @apply text-lg font-semibold text-zinc-300 mt-4 mb-2;
+}
+
+.prose-output p {
+  @apply text-zinc-300 mb-3 leading-relaxed;
+}
+
+.prose-output ul {
+  @apply list-disc list-inside mb-3 text-zinc-300 space-y-1;
+}
+
+.prose-output ol {
+  @apply list-decimal list-inside mb-3 text-zinc-300 space-y-1;
+}
+
+.prose-output li {
+  @apply text-zinc-300;
+}
+
+.prose-output code {
+  @apply bg-zinc-800 text-indigo-300 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose-output pre {
+  @apply bg-zinc-900 border border-zinc-800 rounded-lg p-4 mb-3 overflow-x-auto;
+}
+
+.prose-output pre code {
+  @apply bg-transparent p-0 text-zinc-300;
+}
+
+.prose-output blockquote {
+  @apply border-l-4 border-indigo-500 pl-4 italic text-zinc-400 my-3;
+}
+
+.prose-output strong {
+  @apply text-zinc-100 font-semibold;
+}
+
+.prose-output em {
+  @apply text-zinc-300 italic;
+}
+
+.prose-output a {
+  @apply text-indigo-400 hover:text-indigo-300 underline;
+}
+
+.prose-output hr {
+  @apply border-zinc-700 my-6;
+}
+
+/* Streaming cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.streaming-cursor::after {
+  content: '|';
+  @apply text-indigo-400 ml-0.5;
+  animation: blink 1s infinite;
+}
