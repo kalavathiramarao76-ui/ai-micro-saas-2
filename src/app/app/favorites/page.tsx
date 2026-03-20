@@ -66,17 +66,17 @@ export default function FavoritesPage() {
   }, [filtered]);
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-100">
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
               <span className="mr-2">Favorites</span>
-              <span className="text-lg font-normal text-zinc-500">({favorites.length})</span>
+              <span className="text-lg font-normal" style={{ color: 'var(--text-tertiary)' }}>({favorites.length})</span>
             </h1>
-            <p className="mt-1 text-zinc-500">Your bookmarked generations, organized by tool.</p>
+            <p className="mt-1" style={{ color: 'var(--text-tertiary)' }}>Your bookmarked generations, organized by tool.</p>
           </div>
         </div>
 
@@ -84,7 +84,8 @@ export default function FavoritesPage() {
         <div className="mb-6">
           <div className="relative max-w-md">
             <svg
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+              style={{ color: 'var(--text-tertiary)' }}
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
@@ -97,7 +98,8 @@ export default function FavoritesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search favorites..."
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2.5 pl-10 pr-4 text-sm text-zinc-200 placeholder-zinc-600 outline-none transition focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+              className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+              style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-primary)', color: 'var(--text-primary)' }}
             />
           </div>
         </div>
@@ -110,8 +112,9 @@ export default function FavoritesPage() {
               className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                 filterType === "all"
                   ? "bg-indigo-600 text-white"
-                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+                  : ""
               }`}
+              style={filterType !== "all" ? { backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-secondary)' } : {}}
             >
               All ({favorites.length})
             </button>
@@ -125,8 +128,9 @@ export default function FavoritesPage() {
                   className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                     filterType === type
                       ? "bg-indigo-600 text-white"
-                      : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+                      : ""
                   }`}
+                  style={filterType !== type ? { backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-secondary)' } : {}}
                 >
                   {tool?.name || type} ({count})
                 </button>
@@ -137,21 +141,21 @@ export default function FavoritesPage() {
 
         {/* Content */}
         {favorites.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/30 py-20 text-center">
-            <svg className="mb-4 h-16 w-16 text-zinc-700" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+          <div className="flex flex-col items-center justify-center rounded-2xl glass-card py-20 text-center">
+            <svg className="mb-4 h-16 w-16" style={{ color: 'var(--text-tertiary)' }} fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
             </svg>
-            <h3 className="text-lg font-semibold text-zinc-300">No favorites yet</h3>
-            <p className="mt-1 text-sm text-zinc-500">
+            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-secondary)' }}>No favorites yet</h3>
+            <p className="mt-1 text-sm" style={{ color: 'var(--text-tertiary)' }}>
               Star any generation to save it here for quick access.
             </p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/30 py-20 text-center">
-            <svg className="mb-4 h-12 w-12 text-zinc-700" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+          <div className="flex flex-col items-center justify-center rounded-2xl glass-card py-20 text-center">
+            <svg className="mb-4 h-12 w-12" style={{ color: 'var(--text-tertiary)' }} fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
-            <p className="text-sm text-zinc-500">No favorites match your search.</p>
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>No favorites match your search.</p>
           </div>
         ) : (
           <div className="space-y-8">
@@ -167,23 +171,24 @@ export default function FavoritesPage() {
                         </svg>
                       </div>
                     )}
-                    <h2 className="text-sm font-semibold text-zinc-300">{tool?.name || toolType}</h2>
-                    <span className="text-xs text-zinc-600">({items.length})</span>
+                    <h2 className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>{tool?.name || toolType}</h2>
+                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>({items.length})</span>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((fav) => (
                       <div
                         key={fav.id}
-                        className="group relative rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 transition hover:border-zinc-700"
+                        className="group relative rounded-xl glass-card p-4 transition hover:shadow-lg hover:shadow-indigo-500/5"
                       >
                         <div className="mb-2 flex items-center justify-between">
-                          <span className="text-xs text-zinc-600">
+                          <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
                             {new Date(fav.createdAt).toLocaleDateString()}
                           </span>
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => handleCopy(fav.fullContent, fav.id)}
-                              className="rounded p-1 text-zinc-600 transition hover:bg-zinc-800 hover:text-zinc-300"
+                              className="rounded p-1 transition hover:bg-[var(--surface-hover)]"
+                              style={{ color: 'var(--text-tertiary)' }}
                               title="Copy content"
                             >
                               {copiedId === fav.id ? (
@@ -198,7 +203,7 @@ export default function FavoritesPage() {
                             </button>
                             <button
                               onClick={() => handleRemove(fav.generationId)}
-                              className="rounded p-1 text-amber-400 transition hover:bg-zinc-800 hover:text-amber-300"
+                              className="rounded p-1 text-amber-400 transition hover:bg-[var(--surface-hover)] hover:text-amber-300"
                               title="Remove from favorites"
                             >
                               <svg className="h-3.5 w-3.5 fill-amber-400" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -211,7 +216,7 @@ export default function FavoritesPage() {
                           onClick={() => setExpandedId(expandedId === fav.id ? null : fav.id)}
                           className="w-full text-left"
                         >
-                          <p className={`text-sm text-zinc-300 ${expandedId === fav.id ? "" : "line-clamp-4"}`}>
+                          <p className={`text-sm ${expandedId === fav.id ? "" : "line-clamp-4"}`} style={{ color: 'var(--text-secondary)' }}>
                             {fav.fullContent}
                           </p>
                           {fav.fullContent.length > 200 && (

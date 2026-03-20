@@ -5,30 +5,28 @@ import ToolIcon from "@/components/ToolIcon";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
 
-      {/* Hero */}
+      {/* Hero with animated gradient mesh */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/20 to-transparent" />
-        <div className="absolute inset-0">
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-indigo-600/10 blur-3xl" />
-        </div>
+        <div className="gradient-mesh" />
+        <div className="gradient-mesh-extra" />
         <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-300">
+            <div className="mb-6 inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-400">
               <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
               6 AI-powered tools in one platform
             </div>
-            <h1 className="text-balance text-5xl font-bold tracking-tight text-zinc-100 sm:text-6xl lg:text-7xl">
+            <h1 className="text-balance text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl" style={{ color: 'var(--text-primary)' }}>
               Your AI Productivity{" "}
               <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                 Toolkit
               </span>
             </h1>
-            <p className="mt-6 text-lg leading-8 text-zinc-400 sm:text-xl">
+            <p className="mt-6 text-lg leading-8 sm:text-xl" style={{ color: 'var(--text-secondary)' }}>
               Write emails, summarize meetings, review code, generate blog posts,
               craft product copy, and create tweet threads — all powered by AI.
             </p>
@@ -41,7 +39,8 @@ export default function LandingPage() {
               </Link>
               <a
                 href="#tools"
-                className="rounded-xl border border-zinc-700 px-8 py-3.5 text-sm font-semibold text-zinc-300 transition hover:border-zinc-600 hover:text-zinc-100"
+                className="rounded-xl px-8 py-3.5 text-sm font-semibold transition"
+                style={{ border: '1px solid var(--border-secondary)', color: 'var(--text-secondary)' }}
               >
                 See All Tools
               </a>
@@ -51,7 +50,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-zinc-800/50 bg-zinc-900/30">
+      <section style={{ borderTop: '1px solid var(--border-primary)', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'color-mix(in srgb, var(--bg-secondary) 30%, transparent)' }}>
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
@@ -62,7 +61,7 @@ export default function LandingPage() {
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="text-3xl font-bold text-indigo-400">{stat.value}</p>
-                <p className="mt-1 text-sm text-zinc-500">{stat.label}</p>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-tertiary)' }}>{stat.label}</p>
               </div>
             ))}
           </div>
@@ -72,10 +71,10 @@ export default function LandingPage() {
       {/* Tools Grid */}
       <section id="tools" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+          <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: 'var(--text-primary)' }}>
             Everything You Need, One Platform
           </h2>
-          <p className="mt-4 text-lg text-zinc-400">
+          <p className="mt-4 text-lg" style={{ color: 'var(--text-secondary)' }}>
             Six professional-grade AI tools designed for maximum productivity.
           </p>
         </div>
@@ -85,15 +84,15 @@ export default function LandingPage() {
             <Link
               key={tool.id}
               href={tool.href}
-              className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition hover:border-zinc-700 hover:bg-zinc-900"
+              className="group relative rounded-2xl p-6 transition glass-card hover:shadow-lg hover:shadow-indigo-500/5"
             >
               <div className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${tool.gradient} p-3`}>
                 <ToolIcon path={tool.icon} className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-100 transition group-hover:text-indigo-400">
+              <h3 className="text-lg font-semibold transition group-hover:text-indigo-400" style={{ color: 'var(--text-primary)' }}>
                 {tool.name}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
                 {tool.description}
               </p>
               <div className="mt-4 flex items-center gap-1 text-sm font-medium text-indigo-400 opacity-0 transition group-hover:opacity-100">
@@ -108,9 +107,9 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="border-t border-zinc-800/50 bg-zinc-900/20">
+      <section style={{ borderTop: '1px solid var(--border-primary)', backgroundColor: 'color-mix(in srgb, var(--bg-secondary) 20%, transparent)' }}>
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <h2 className="text-center text-3xl font-bold text-zinc-100">
+          <h2 className="text-center text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
             How It Works
           </h2>
           <div className="mt-16 grid gap-8 md:grid-cols-3">
@@ -135,10 +134,10 @@ export default function LandingPage() {
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600/10 text-xl font-bold text-indigo-400">
                   {item.step}
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-zinc-100">
+                <h3 className="mt-4 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm text-zinc-500">{item.desc}</p>
+                <p className="mt-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -168,16 +167,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/50">
+      {/* Footer with Powered by AI badge */}
+      <footer style={{ borderTop: '1px solid var(--border-primary)' }}>
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-zinc-600">
-              AI Toolkit Pro — Built with Next.js, Tailwind CSS & AI
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+              AI ToolBox — Built with Next.js, Tailwind CSS & AI
             </p>
-            <p className="text-sm text-zinc-600">
-              No API key required. Free to use.
-            </p>
+            <div className="flex items-center gap-4">
+              <span className="powered-badge text-sm font-semibold">
+                Powered by AI
+              </span>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                No API key required. Free to use.
+              </p>
+            </div>
           </div>
         </div>
       </footer>

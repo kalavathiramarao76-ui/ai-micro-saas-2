@@ -11,32 +11,33 @@ interface SavedListProps {
 export default function SavedList({ items, onLoad, onDelete }: SavedListProps) {
   if (items.length === 0) {
     return (
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-center">
-        <p className="text-sm text-zinc-500">No saved generations yet</p>
+      <div className="rounded-xl glass-card p-6 text-center">
+        <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>No saved generations yet</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-1">
-      <div className="border-b border-zinc-800 px-4 py-3">
-        <h3 className="text-sm font-semibold text-zinc-300">Saved Generations</h3>
+    <div className="rounded-xl glass-card p-1">
+      <div className="border-b px-4 py-3" style={{ borderColor: 'var(--border-primary)' }}>
+        <h3 className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>Saved Generations</h3>
       </div>
       <div className="max-h-[300px] overflow-y-auto">
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-start justify-between border-b border-zinc-800/50 px-4 py-3 last:border-0"
+            className="flex items-start justify-between border-b px-4 py-3 last:border-0"
+            style={{ borderColor: 'var(--border-primary)' }}
           >
             <button
               onClick={() => onLoad(item)}
               className="flex-1 text-left"
             >
-              <p className="line-clamp-1 text-sm text-zinc-300">
+              <p className="line-clamp-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {item.input.slice(0, 80)}
                 {item.input.length > 80 ? "..." : ""}
               </p>
-              <p className="mt-0.5 text-xs text-zinc-600">
+              <p className="mt-0.5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
                 {new Date(item.createdAt).toLocaleDateString()} at{" "}
                 {new Date(item.createdAt).toLocaleTimeString()}
               </p>

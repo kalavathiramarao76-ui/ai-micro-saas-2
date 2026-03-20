@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getFavoritesCount } from "@/lib/favorites";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -18,7 +19,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b backdrop-blur-xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'color-mix(in srgb, var(--bg-primary) 80%, transparent)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -37,26 +38,31 @@ export default function Navbar() {
                 />
               </svg>
             </div>
-            <span className="text-lg font-bold text-zinc-100">
-              AI Toolkit <span className="text-indigo-400">Pro</span>
+            <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+              AI ToolBox
             </span>
           </Link>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             {isApp ? (
               <>
                 <Link
                   href="/app"
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition hover:text-zinc-100 ${
-                    pathname === "/app" ? "text-zinc-100" : "text-zinc-400"
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    pathname === "/app"
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/app/favorites"
-                  className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition hover:text-zinc-100 ${
-                    pathname === "/app/favorites" ? "text-zinc-100" : "text-zinc-400"
+                  className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    pathname === "/app/favorites"
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
                   <svg

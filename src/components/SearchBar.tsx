@@ -135,7 +135,8 @@ export default function SearchBar({ onResultClick }: SearchBarProps) {
           onChange={handleChange}
           onFocus={() => query.trim() && setIsOpen(true)}
           placeholder="Search all generations... (/ or Ctrl+F)"
-          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2.5 pl-10 pr-4 text-sm text-zinc-200 placeholder-zinc-600 outline-none transition focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+          className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+          style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-primary)', color: 'var(--text-primary)' }}
         />
         {query && (
           <button
@@ -154,7 +155,7 @@ export default function SearchBar({ onResultClick }: SearchBarProps) {
       </div>
 
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[400px] overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl shadow-black/50">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[400px] overflow-y-auto rounded-xl border shadow-2xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-primary)' }}>
           {results.length === 0 ? (
             <div className="flex flex-col items-center gap-3 p-8 text-center">
               <svg className="h-12 w-12 text-zinc-700" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">

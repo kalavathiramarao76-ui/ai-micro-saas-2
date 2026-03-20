@@ -141,14 +141,15 @@ export default function ToolLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <Link
             href="/app"
-            className="mb-4 inline-flex items-center gap-1 text-sm text-zinc-500 transition hover:text-zinc-300"
+            className="mb-4 inline-flex items-center gap-1 text-sm transition"
+            style={{ color: 'var(--text-tertiary)' }}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -160,8 +161,8 @@ export default function ToolLayout({
               <ToolIcon path={toolIcon} className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-zinc-100">{toolName}</h1>
-              <p className="text-sm text-zinc-500">{toolDescription}</p>
+              <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{toolName}</h1>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>{toolDescription}</p>
             </div>
           </div>
         </div>
@@ -169,12 +170,13 @@ export default function ToolLayout({
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Input Panel */}
           <div className="space-y-4">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-1">
-              <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-                <h2 className="text-sm font-semibold text-zinc-300">Input</h2>
+            <div className="rounded-xl glass-card p-1">
+              <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: 'var(--border-primary)' }}>
+                <h2 className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>Input</h2>
                 <button
                   onClick={() => setShowSaved(!showSaved)}
-                  className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-200"
+                  className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
@@ -197,9 +199,9 @@ export default function ToolLayout({
           </div>
 
           {/* Output Panel */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-1">
-            <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-              <h2 className="text-sm font-semibold text-zinc-300">Output</h2>
+          <div className="rounded-xl glass-card p-1">
+            <div className="flex items-center justify-between border-b px-4 py-3" style={{ borderColor: 'var(--border-primary)' }}>
+              <h2 className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>Output</h2>
               {output && !isStreaming && (
                 <div className="flex items-center gap-1">
                   {lastGeneration && (
@@ -215,7 +217,8 @@ export default function ToolLayout({
                   )}
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-700"
+                    className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition"
+                    style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
                   >
                     {copied ? (
                       <>
@@ -246,10 +249,10 @@ export default function ToolLayout({
                 </div>
               ) : (
                 <div className="flex h-full min-h-[350px] flex-col items-center justify-center text-center">
-                  <div className={`mb-4 rounded-full bg-zinc-800 p-4 ${toolColor}`}>
+                  <div className={`mb-4 rounded-full p-4 ${toolColor}`} style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                     <ToolIcon path={toolIcon} className="h-8 w-8" />
                   </div>
-                  <p className="text-sm text-zinc-500">
+                  <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
                     Your AI-generated content will appear here
                   </p>
                 </div>
