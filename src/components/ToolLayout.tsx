@@ -11,6 +11,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import ErrorFallback from "./ErrorFallback";
 import { saveGeneration, getGenerationsByTool, deleteGeneration, SavedGeneration } from "@/lib/storage";
 import { trackToolUsage } from "@/lib/favorites";
+import { trackGeneration } from "@/lib/analytics";
 
 interface ToolLayoutProps {
   toolId: string;
@@ -126,6 +127,7 @@ export default function ToolLayout({
           });
           setSaved((prev) => [gen, ...prev]);
           setLastGeneration(gen);
+          trackGeneration(toolId, toolName, fullText);
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : "An unexpected error occurred";

@@ -8,6 +8,7 @@ import SearchBar from "@/components/SearchBar";
 import { tools } from "@/lib/tools";
 import { getSavedGenerations, SavedGeneration } from "@/lib/storage";
 import { getRecentlyUsedTools } from "@/lib/favorites";
+import OnboardingTour from "@/components/OnboardingTour";
 
 function AnimatedCounter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
@@ -59,6 +60,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <OnboardingTour />
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Welcome + Search */}
