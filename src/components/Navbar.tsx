@@ -1,11 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getFavoritesCount } from "@/lib/favorites";
 
 export default function Navbar() {
   const pathname = usePathname();
   const isApp = pathname.startsWith("/app");
+  const [favCount, setFavCount] = useState(0);
+
+  useEffect(() => {
+    setFavCount(getFavoritesCount());
+    const handler = () => setFavCount(getFavoritesCount());
+    window.addEventListener("favorites-changed", handler);
+    return () => window.removeEventListener("favorites-changed", handler);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-xl">
@@ -32,14 +42,44 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {isApp ? (
-              <Link
-                href="/app"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition hover:text-zinc-100"
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  href="/app"
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition hover:text-zinc-100 ${
+                    pathname === "/app" ? "text-zinc-100" : "text-zinc-400"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/app/favorites"
+                  className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition hover:text-zinc-100 ${
+                    pathname === "/app/favorites" ? "text-zinc-100" : "text-zinc-400"
+                  }`}
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill={pathname === "/app/favorites" ? "currentColor" : "none"}
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                    />
+                  </svg>
+                  Favorites
+                  {favCount > 0 && (
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500/20 px-1.5 text-[10px] font-bold text-amber-400">
+                      {favCount}
+                    </span>
+                  )}
+                </Link>
+              </>
             ) : (
               <Link
                 href="/app"
