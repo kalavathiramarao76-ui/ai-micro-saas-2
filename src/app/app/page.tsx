@@ -3,16 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import ToolIcon from "@/components/ToolIcon";
-import SearchBar from "@/components/SearchBar";
 import { tools } from "@/lib/tools";
 import { getSavedGenerations, SavedGeneration } from "@/lib/storage";
 import { getRecentlyUsedTools } from "@/lib/favorites";
 import OnboardingTour from "@/components/OnboardingTour";
 
+const toolMeta = [
+  { accent: "compose()", desc: "Professional emails in seconds. Replies, outreach, follow-ups." },
+  { accent: "summarize()", desc: "Action items, decisions, and key takeaways from any transcript." },
+  { accent: "review()", desc: "Catches bugs, security issues, and anti-patterns in your code." },
+  { accent: "generate()", desc: "SEO-optimized long-form content with structured headings." },
+  { accent: "write()", desc: "Compelling product descriptions that convert on any platform." },
+  { accent: "thread()", desc: "Viral-ready threads with hooks, insights, and calls to action." },
+];
+
 function AnimatedCounter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
 
   useEffect(() => {
@@ -37,7 +43,7 @@ function AnimatedCounter({ target }: { target: number }) {
     return () => clearInterval(interval);
   }, [target]);
 
-  return <span ref={ref}>{count}</span>;
+  return <span>{count}</span>;
 }
 
 export default function DashboardPage() {
@@ -50,8 +56,7 @@ export default function DashboardPage() {
     setRecentGenerations(all.slice(0, 5));
     setTotalGenerations(all.length);
 
-    // Get recently used tools
-    const recentIds = getRecentlyUsedTools().slice(0, 3);
+    const recentIds = getRecentlyUsedTools().slice(0, 6);
     const recentTools = recentIds
       .map((r) => tools.find((t) => t.id === r.toolId))
       .filter(Boolean) as typeof tools;
@@ -62,112 +67,167 @@ export default function DashboardPage() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <OnboardingTour />
       <Navbar />
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Welcome + Search */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Dashboard</h1>
-            <p className="mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              Choose a tool to get started with AI-powered content generation.
-            </p>
-          </div>
-          {totalGenerations > 0 && (
-            <div className="flex items-center gap-2 rounded-xl glass-card px-4 py-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600/20">
-                <svg className="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                  <AnimatedCounter target={totalGenerations} />
-                </p>
-                <p className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>Generations</p>
-              </div>
+
+      {/* Noise texture overlay — matches landing */}
+      <div className="pointer-events-none fixed inset-0 z-40 opacity-[0.015]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: "repeat",
+      }} />
+
+      {/* Subtle gradient wash */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-b from-indigo-950/20 via-transparent to-transparent blur-3xl" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-16 sm:py-20">
+        {/* Header */}
+        <div className="mb-16">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em]" style={{ color: 'var(--accent-primary)' }}>
+            Tools
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl" style={{ color: 'var(--text-primary)' }}>
+            Your Workspace
+          </h1>
+          <p className="mt-4 max-w-xl text-lg leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+            Six AI tools. One interface. Pick a tool and start creating.
+          </p>
+        </div>
+
+        {/* Stats — massive monospace numbers */}
+        {totalGenerations > 0 && (
+          <div className="mb-16 flex items-baseline gap-16 border-y py-10" style={{ borderColor: 'var(--border-primary)' }}>
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                <AnimatedCounter target={totalGenerations} />
+              </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.15em]" style={{ color: 'var(--text-tertiary)' }}>
+                Generations
+              </p>
             </div>
-          )}
-        </div>
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                {tools.length}
+              </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.15em]" style={{ color: 'var(--text-tertiary)' }}>
+                Tools
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                <AnimatedCounter target={recentlyUsedTools.length} />
+              </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.15em]" style={{ color: 'var(--text-tertiary)' }}>
+                Recently Used
+              </p>
+            </div>
+          </div>
+        )}
 
-        {/* Search Bar */}
-        <div className="mb-8">
-          <SearchBar />
-        </div>
-
-        {/* Recently Used */}
+        {/* Recently Used — clean horizontal scroll */}
         {recentlyUsedTools.length > 0 && (
-          <div className="mb-8">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-              Recently Used
-            </h2>
-            <div className="flex flex-wrap gap-3">
+          <div className="mb-16">
+            <p className="mb-6 text-xs font-medium uppercase tracking-[0.2em]" style={{ color: 'var(--text-tertiary)' }}>
+              Recently used
+            </p>
+            <div className="flex gap-4 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
               {recentlyUsedTools.map((tool) => (
                 <Link
                   key={tool.id}
                   href={tool.href}
-                  className="flex items-center gap-3 rounded-xl glass-card px-4 py-3 transition hover:shadow-lg hover:shadow-indigo-500/5"
+                  className="flex-shrink-0 flex items-center gap-3 rounded-lg px-5 py-3 transition hover:opacity-80"
+                  style={{
+                    border: '1px solid var(--border-primary)',
+                    color: 'var(--text-secondary)',
+                  }}
                 >
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${tool.gradient}`}>
-                    <ToolIcon path={tool.icon} className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{tool.name}</p>
-                    <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Open tool</p>
-                  </div>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                    {tool.name}
+                  </span>
+                  <svg className="h-3.5 w-3.5" style={{ color: 'var(--text-tertiary)' }} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                  </svg>
                 </Link>
               ))}
             </div>
           </div>
         )}
 
-        {/* Tool Grid with glassmorphism */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => (
-            <Link
-              key={tool.id}
-              href={tool.href}
-              className="tool-card-gradient group relative rounded-xl p-[1px]"
-            >
-              <div className="flex h-full items-start gap-4 rounded-xl p-5 transition glass-card group-hover:shadow-lg group-hover:shadow-indigo-500/5">
-                <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient}`}
-                >
-                  <ToolIcon path={tool.icon} className="h-5 w-5 text-white" />
+        {/* Tool Cards — large editorial layout */}
+        <div className="space-y-0">
+          {tools.map((tool, i) => {
+            const number = String(i + 1).padStart(2, "0");
+            const meta = toolMeta[i];
+
+            return (
+              <Link
+                key={tool.id}
+                href={tool.href}
+                className="group block border-t transition"
+                style={{ borderColor: 'var(--border-primary)' }}
+              >
+                <div className="flex flex-col gap-4 py-10 sm:flex-row sm:items-center sm:gap-12 sm:py-12">
+                  {/* Number */}
+                  <span className="font-mono text-xs shrink-0 w-8" style={{ color: 'var(--text-tertiary)' }}>
+                    {number}
+                  </span>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3
+                      className="text-2xl font-bold tracking-tight transition sm:text-3xl group-hover:text-indigo-400"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      {tool.name}
+                    </h3>
+                    <p className="mt-2 max-w-lg text-base leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+                      {meta.desc}
+                    </p>
+                  </div>
+
+                  {/* Arrow */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <code className="hidden sm:block font-mono text-sm transition group-hover:text-indigo-400" style={{ color: 'var(--text-tertiary)' }}>
+                      {meta.accent}
+                    </code>
+                    <svg
+                      className="h-5 w-5 transition group-hover:translate-x-1"
+                      style={{ color: 'var(--text-tertiary)' }}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <h3 className="font-semibold transition group-hover:text-indigo-400" style={{ color: 'var(--text-primary)' }}>
-                    {tool.name}
-                  </h3>
-                  <p className="mt-1 line-clamp-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                    {tool.description}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
+          {/* Bottom border for last item */}
+          <div className="border-t" style={{ borderColor: 'var(--border-primary)' }} />
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activity — clean list */}
         {recentGenerations.length > 0 && (
-          <div className="mt-12">
-            <h2 className="mb-4 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Recent Generations
-            </h2>
-            <div className="rounded-xl glass-card overflow-hidden">
-              {recentGenerations.map((gen, i) => (
+          <div className="mt-24">
+            <p className="mb-6 text-xs font-medium uppercase tracking-[0.2em]" style={{ color: 'var(--text-tertiary)' }}>
+              Recent generations
+            </p>
+            <div className="space-y-0">
+              {recentGenerations.map((gen) => (
                 <div
                   key={gen.id}
-                  className={`flex items-center justify-between px-5 py-4 ${
-                    i !== recentGenerations.length - 1 ? "border-b" : ""
-                  }`}
+                  className="flex items-center justify-between border-t py-5"
                   style={{ borderColor: 'var(--border-primary)' }}
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-md px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
-                        {gen.toolName}
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                        {new Date(gen.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                       </span>
-                      <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                        {new Date(gen.createdAt).toLocaleDateString()}
+                      <span className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--accent-primary)' }}>
+                        {gen.toolName}
                       </span>
                     </div>
                     <p className="mt-1 line-clamp-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -176,43 +236,20 @@ export default function DashboardPage() {
                   </div>
                   <Link
                     href={`/app/${gen.toolType === "code-review" ? "code-review" : gen.toolType}`}
-                    className="ml-4 shrink-0 text-xs font-medium text-indigo-400 hover:text-indigo-300"
+                    className="ml-6 shrink-0 text-xs font-medium transition hover:text-indigo-300"
+                    style={{ color: 'var(--text-tertiary)' }}
                   >
-                    Open Tool
+                    Open
                   </Link>
                 </div>
               ))}
+              <div className="border-t" style={{ borderColor: 'var(--border-primary)' }} />
             </div>
           </div>
         )}
 
-        {/* Quick Tips */}
-        <div className="mt-12 rounded-xl glass-card p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-            Tips
-          </h2>
-          <ul className="mt-3 space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            <li className="flex items-start gap-2">
-              <span className="mt-1 text-indigo-400">&#8226;</span>
-              All generated content is automatically saved to your browser&apos;s local storage.
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-1 text-indigo-400">&#8226;</span>
-              Star any generation to add it to your favorites for quick access.
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-1 text-indigo-400">&#8226;</span>
-              Use Ctrl+F or / to quickly search across all your generations.
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-1 text-indigo-400">&#8226;</span>
-              Be specific in your inputs for better AI-generated results.
-            </li>
-          </ul>
-        </div>
-
-        {/* Powered by AI footer */}
-        <div className="mt-8 text-center">
+        {/* Footer */}
+        <div className="mt-24 text-center">
           <span className="powered-badge text-sm font-semibold">
             Powered by AI
           </span>
