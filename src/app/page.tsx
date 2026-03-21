@@ -1,196 +1,220 @@
+"use client";
+
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import { tools } from "@/lib/tools";
-import ToolIcon from "@/components/ToolIcon";
+import { useEffect, useRef } from "react";
+
+const toolShowcase = [
+  {
+    number: "01",
+    name: "Email Writer",
+    desc: "Professional emails in seconds. Replies, outreach, follow-ups — with the right tone, every time.",
+    accent: "compose()",
+    href: "/app/email",
+  },
+  {
+    number: "02",
+    name: "Meeting Summarizer",
+    desc: "Paste a transcript. Get action items, decisions, and key takeaways — structured and instant.",
+    accent: "summarize()",
+    href: "/app/meetings",
+  },
+  {
+    number: "03",
+    name: "Code Reviewer",
+    desc: "Catches bugs, security issues, and anti-patterns. Like a senior engineer on every pull request.",
+    accent: "review()",
+    href: "/app/code-review",
+  },
+  {
+    number: "04",
+    name: "Blog Post Generator",
+    desc: "SEO-optimized long-form content with structured headings, keyword placement, and real depth.",
+    accent: "generate()",
+    href: "/app/blog",
+  },
+  {
+    number: "05",
+    name: "Product Copywriter",
+    desc: "Compelling product descriptions for Amazon, Shopify, and any e-commerce platform that converts.",
+    accent: "write()",
+    href: "/app/product",
+  },
+  {
+    number: "06",
+    name: "Tweet Thread Creator",
+    desc: "Viral-ready threads with hooks, insights, and calls to action. Five to ten tweets, ready to post.",
+    accent: "thread()",
+    href: "/app/threads",
+  },
+];
 
 export default function LandingPage() {
+  const fadeRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-up-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    fadeRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const addRef = (el: HTMLElement | null) => {
+    if (el && !fadeRefs.current.includes(el)) {
+      fadeRefs.current.push(el);
+    }
+  };
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
-      <Navbar />
+    <div className="min-h-screen bg-[#09090b] text-white antialiased">
+      {/* Noise texture overlay */}
+      <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.015]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: "repeat",
+      }} />
 
-      {/* Hero with animated gradient mesh */}
-      <section className="relative overflow-hidden">
-        <div className="gradient-mesh" />
-        <div className="gradient-mesh-extra" />
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
-              <div className="inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-400">
-                <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                </svg>
-                6 AI-powered tools in one platform
-              </div>
-              <div className="enterprise-badge inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold">
-                <svg className="mr-1.5 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-                Enterprise-Grade Resilience
-              </div>
-            </div>
-            <h1 className="text-balance text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl" style={{ color: 'var(--text-primary)' }}>
-              Your AI Productivity{" "}
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                Toolkit
-              </span>
-            </h1>
-            <p className="mt-6 text-lg leading-8 sm:text-xl" style={{ color: 'var(--text-secondary)' }}>
-              Write emails, summarize meetings, review code, generate blog posts,
-              craft product copy, and create tweet threads — all powered by AI.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-4">
-              <Link
-                href="/app"
-                className="rounded-xl bg-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-500 hover:shadow-indigo-500/30"
-              >
-                Get Started Free
-              </Link>
-              <a
-                href="#tools"
-                className="rounded-xl px-8 py-3.5 text-sm font-semibold transition"
-                style={{ border: '1px solid var(--border-secondary)', color: 'var(--text-secondary)' }}
-              >
-                See All Tools
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Subtle gradient wash — one only */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-b from-indigo-950/20 via-transparent to-transparent blur-3xl" />
+      </div>
 
-      {/* Stats */}
-      <section style={{ borderTop: '1px solid var(--border-primary)', borderBottom: '1px solid var(--border-primary)', backgroundColor: 'color-mix(in srgb, var(--bg-secondary) 30%, transparent)' }}>
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {[
-              { value: "6", label: "AI Tools" },
-              { value: "Free", label: "No API Key Needed" },
-              { value: "Real-time", label: "Streaming Output" },
-              { value: "Instant", label: "Generation Speed" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-3xl font-bold text-indigo-400">{stat.value}</p>
-                <p className="mt-1 text-sm" style={{ color: 'var(--text-tertiary)' }}>{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Nav */}
+      <nav className="relative z-10 mx-auto flex max-w-4xl items-center justify-between px-6 py-8">
+        <span className="text-sm font-medium tracking-tight text-gray-300">ToolSpark AI</span>
+        <Link
+          href="/app"
+          className="text-xs uppercase tracking-widest text-gray-500 transition hover:text-gray-300"
+        >
+          Open App
+        </Link>
+      </nav>
 
-      {/* Tools Grid */}
-      <section id="tools" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: 'var(--text-primary)' }}>
-            Everything You Need, One Platform
-          </h2>
-          <p className="mt-4 text-lg" style={{ color: 'var(--text-secondary)' }}>
-            Six professional-grade AI tools designed for maximum productivity.
+      {/* Hero */}
+      <section className="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-32 sm:pt-32 sm:pb-40">
+        <div ref={addRef} className="fade-up">
+          <p className="mb-6 text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
+            Productivity platform
           </p>
-        </div>
-
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => (
+          <h1 className="text-5xl font-bold leading-[1.08] tracking-tight text-gray-100 sm:text-7xl">
+            Six AI tools.
+            <br />
+            One workspace.
+          </h1>
+          <p className="mt-8 max-w-xl text-lg leading-relaxed text-gray-400">
+            Write emails, summarize meetings, review code, generate posts,
+            craft product copy, and create threads — from a single interface.
+          </p>
+          <div className="mt-12 flex items-center gap-6">
             <Link
-              key={tool.id}
-              href={tool.href}
-              className="group relative rounded-2xl p-6 transition glass-card hover:shadow-lg hover:shadow-indigo-500/5"
+              href="/app"
+              className="rounded-lg bg-gray-100 px-7 py-3 text-sm font-semibold text-gray-900 transition hover:bg-white"
             >
-              <div className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${tool.gradient} p-3`}>
-                <ToolIcon path={tool.icon} className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold transition group-hover:text-indigo-400" style={{ color: 'var(--text-primary)' }}>
-                {tool.name}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                {tool.description}
-              </p>
-              <div className="mt-4 flex items-center gap-1 text-sm font-medium text-indigo-400 opacity-0 transition group-hover:opacity-100">
-                Try it now
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </div>
+              Get Started
             </Link>
+            <a
+              href="#tools"
+              className="text-sm font-medium text-gray-500 transition hover:text-gray-300"
+            >
+              See the tools
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats ribbon */}
+      <section ref={addRef} className="fade-up relative z-10 border-y border-white/5">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-12 gap-y-4 px-6 py-10">
+          {["6 Tools", "50K+ Words Generated", "Used by 1,200 Teams"].map((stat, i) => (
+            <span key={i} className="font-mono text-xs tracking-wide text-gray-500">
+              {stat}
+              {i < 2 && <span className="ml-12 text-gray-700 hidden sm:inline">&bull;</span>}
+            </span>
           ))}
         </div>
       </section>
 
-      {/* How it works */}
-      <section style={{ borderTop: '1px solid var(--border-primary)', backgroundColor: 'color-mix(in srgb, var(--bg-secondary) 20%, transparent)' }}>
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <h2 className="text-center text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            How It Works
+      {/* Tool Showcase — editorial full-width rows */}
+      <section id="tools" className="relative z-10 py-32">
+        <div className="mx-auto max-w-4xl px-6">
+          <p ref={addRef} className="fade-up mb-4 text-xs font-medium uppercase tracking-[0.2em] text-gray-500">
+            The toolkit
+          </p>
+          <h2 ref={addRef} className="fade-up text-3xl font-bold tracking-tight text-gray-100 sm:text-4xl">
+            Every tool earns its place.
           </h2>
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {[
-              {
-                step: "01",
-                title: "Choose Your Tool",
-                desc: "Pick from 6 specialized AI tools — each optimized for a specific task.",
-              },
-              {
-                step: "02",
-                title: "Provide Your Input",
-                desc: "Enter your context, paste your content, or describe what you need.",
-              },
-              {
-                step: "03",
-                title: "Get AI Results",
-                desc: "Watch as AI generates polished, professional content in real-time.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600/10 text-xl font-bold text-indigo-400">
-                  {item.step}
+        </div>
+
+        <div className="mt-24 space-y-0">
+          {toolShowcase.map((tool, i) => {
+            const isEven = i % 2 === 0;
+            return (
+              <Link
+                key={tool.number}
+                href={tool.href}
+                ref={addRef}
+                className={`fade-up group block border-t border-white/5 transition hover:bg-white/[0.02] ${
+                  i === toolShowcase.length - 1 ? "border-b" : ""
+                }`}
+              >
+                <div className={`mx-auto flex max-w-4xl flex-col gap-4 px-6 py-16 sm:flex-row sm:items-center sm:gap-12 ${
+                  isEven ? "" : "sm:flex-row-reverse sm:text-right"
+                }`}>
+                  <div className="flex-1">
+                    <span className="font-mono text-xs text-gray-600">{tool.number}</span>
+                    <h3 className="mt-3 text-2xl font-bold tracking-tight text-gray-200 sm:text-4xl transition group-hover:text-white">
+                      {tool.name}
+                    </h3>
+                    <p className="mt-4 max-w-md text-base leading-relaxed text-gray-400">
+                      {tool.desc}
+                    </p>
+                  </div>
+                  <div className={`flex-shrink-0 ${isEven ? "" : "sm:text-left"}`}>
+                    <code className="font-mono text-sm text-gray-600 transition group-hover:text-indigo-400">
+                      {tool.accent}
+                    </code>
+                  </div>
                 </div>
-                <h3 className="mt-4 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>{item.desc}</p>
-              </div>
-            ))}
-          </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-700 p-12 text-center shadow-2xl">
-          <div className="relative">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Ready to supercharge your productivity?
-            </h2>
-            <p className="mt-4 text-lg text-indigo-100">
-              Start using all 6 AI tools right now. No signup required.
-            </p>
-            <Link
-              href="/app"
-              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-indigo-700 shadow-lg transition hover:bg-indigo-50"
-            >
-              Launch Dashboard
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
-          </div>
+      {/* Bottom CTA */}
+      <section ref={addRef} className="fade-up relative z-10 mx-auto max-w-4xl px-6 py-32 sm:py-48 text-center">
+        <h2 className="text-4xl font-bold tracking-tight text-gray-100 sm:text-6xl">
+          Start creating.
+        </h2>
+        <p className="mt-6 text-base text-gray-500">
+          No signup. No API keys. Just open and go.
+        </p>
+        <div className="mt-12">
+          <Link
+            href="/app"
+            className="rounded-lg bg-gray-100 px-8 py-3.5 text-sm font-semibold text-gray-900 transition hover:bg-white"
+          >
+            Launch ToolSpark
+          </Link>
         </div>
       </section>
 
-      {/* Footer with Powered by AI badge */}
-      <footer style={{ borderTop: '1px solid var(--border-primary)' }}>
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-              AI ToolBox — Built with Next.js, Tailwind CSS & AI
-            </p>
-            <div className="flex items-center gap-4">
-              <span className="powered-badge text-sm font-semibold">
-                Powered by AI
-              </span>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                No API key required. Free to use.
-              </p>
-            </div>
-          </div>
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/5">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-8">
+          <span className="text-xs text-gray-600">ToolSpark AI</span>
+          <span className="text-xs text-gray-600">Built with Next.js</span>
         </div>
       </footer>
     </div>
