@@ -8,6 +8,7 @@ import ThemeToggle from "./ThemeToggle";
 import CommandPalette from "./CommandPalette";
 import CollabPresence from "./CollabPresence";
 import NotificationCenter from "./NotificationCenter";
+import { UserMenu } from "./AuthGate";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -82,6 +83,7 @@ export default function Navbar() {
               {isApp && <NotificationCenter />}
 
               <ThemeToggle />
+              <UserMenu />
               {isApp ? (
                 <>
                   <Link

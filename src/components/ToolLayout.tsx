@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./Navbar";
+import { incrementUsage } from "@/lib/usage";
 import ToolIcon from "./ToolIcon";
 import SavedList from "./SavedList";
 import FavoriteButton from "./FavoriteButton";
@@ -120,6 +121,7 @@ export default function ToolLayout({
         }
 
         if (fullText) {
+          incrementUsage();
           const gen = saveGeneration({
             toolType: toolId,
             toolName,

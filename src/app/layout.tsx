@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import InstallPrompt from "@/components/InstallPrompt";
+import { AuthGate } from "@/components/AuthGate";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -135,7 +136,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen`}
       >
-        {children}
+        <AuthGate>{children}</AuthGate>
         <InstallPrompt />
       </body>
     </html>
