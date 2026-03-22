@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const toolShowcase = [
   {
@@ -48,10 +48,83 @@ const toolShowcase = [
   },
 ];
 
-export default function LandingPage() {
-  const fadeRefs = useRef<(HTMLElement | null)[]>([]);
+/* ─── Letter Reveal ─── */
+function LetterReveal({ text, as: Tag = "span", className = "", delay = 0 }: {
+  text: string; as?: React.ElementType; className?: string; delay?: number;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) { setVisible(true); return; }
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <Tag ref={ref as React.RefObject<HTMLElement>} className={className} aria-label={text}>
+      {text.split("").map((ch, i) => (
+        <span
+          key={i}
+          className="inline-block transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(18px)",
+            transitionDelay: visible ? `${delay + i * 32}ms` : "0ms",
+          }}
+        >
+          {ch === " " ? "\u00A0" : ch}
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
+/* ─── Scroll Counter ─── */
+function ScrollCounter({ end, suffix = "", duration = 900 }: {
+  end: number; suffix?: string; duration?: number;
+}) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) { setValue(end); return; }
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        obs.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          setValue(Math.round(eased * end));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [end, duration]);
+
+  return <span ref={ref}>{value.toLocaleString()}{suffix}</span>;
+}
+
+export default function LandingPage() {
+  const fadeRefs = useRef<(HTMLElement | null)[]>([]);
+  const staggerRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -68,12 +141,42 @@ export default function LandingPage() {
       if (el) observer.observe(el);
     });
 
+    /* Stagger observer for tool cards */
+    if (!prefersReduced) {
+      const staggerObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const idx = staggerRefs.current.indexOf(entry.target as HTMLElement);
+              const el = entry.target as HTMLElement;
+              el.style.transitionDelay = `${idx * 80}ms`;
+              el.classList.add("stagger-visible");
+              staggerObs.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
+      );
+
+      staggerRefs.current.forEach((el) => {
+        if (el) staggerObs.observe(el);
+      });
+
+      return () => { observer.disconnect(); staggerObs.disconnect(); };
+    }
+
     return () => observer.disconnect();
   }, []);
 
   const addRef = (el: HTMLElement | null) => {
     if (el && !fadeRefs.current.includes(el)) {
       fadeRefs.current.push(el);
+    }
+  };
+
+  const addStaggerRef = (el: HTMLElement | null) => {
+    if (el && !staggerRefs.current.includes(el)) {
+      staggerRefs.current.push(el);
     }
   };
 
@@ -108,9 +211,9 @@ export default function LandingPage() {
             Productivity platform
           </p>
           <h1 className="text-5xl font-bold leading-[1.08] tracking-tight text-gray-100 sm:text-7xl">
-            Six AI tools.
+            <LetterReveal text="Six AI tools." delay={0} />
             <br />
-            One workspace.
+            <LetterReveal text="One workspace." delay={420} />
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-gray-400">
             Write emails, summarize meetings, review code, generate posts,
@@ -136,12 +239,17 @@ export default function LandingPage() {
       {/* Stats ribbon */}
       <section ref={addRef} className="fade-up relative z-10 border-y border-white/5">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-12 gap-y-4 px-6 py-10">
-          {["6 Tools", "50K+ Words Generated", "Used by 1,200 Teams"].map((stat, i) => (
-            <span key={i} className="font-mono text-xs tracking-wide text-gray-500">
-              {stat}
-              {i < 2 && <span className="ml-12 text-gray-700 hidden sm:inline">&bull;</span>}
-            </span>
-          ))}
+          <span className="font-mono text-xs tracking-wide text-gray-500">
+            <ScrollCounter end={6} /> Tools
+            <span className="ml-12 text-gray-700 hidden sm:inline">&bull;</span>
+          </span>
+          <span className="font-mono text-xs tracking-wide text-gray-500">
+            <ScrollCounter end={50} suffix="K+" /> Words Generated
+            <span className="ml-12 text-gray-700 hidden sm:inline">&bull;</span>
+          </span>
+          <span className="font-mono text-xs tracking-wide text-gray-500">
+            Used by <ScrollCounter end={1200} /> Teams
+          </span>
         </div>
       </section>
 
@@ -163,8 +271,8 @@ export default function LandingPage() {
               <Link
                 key={tool.number}
                 href={tool.href}
-                ref={addRef}
-                className={`fade-up group block border-t border-white/5 transition hover:bg-white/[0.02] ${
+                ref={addStaggerRef}
+                className={`stagger-card group block border-t border-white/5 transition hover:bg-white/[0.02] ${
                   i === toolShowcase.length - 1 ? "border-b" : ""
                 }`}
               >
@@ -195,7 +303,7 @@ export default function LandingPage() {
       {/* Bottom CTA */}
       <section ref={addRef} className="fade-up relative z-10 mx-auto max-w-4xl px-6 py-32 sm:py-48 text-center">
         <h2 className="text-4xl font-bold tracking-tight text-gray-100 sm:text-6xl">
-          Start creating.
+          <LetterReveal text="Start creating." />
         </h2>
         <p className="mt-6 text-base text-gray-500">
           No signup. No API keys. Just open and go.
