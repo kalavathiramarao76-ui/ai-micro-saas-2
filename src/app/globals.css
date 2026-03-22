@@ -226,6 +226,28 @@
   animation: favoriteBounce 0.4s ease-in-out;
 }
 
+/* Skeleton shimmer loading animation */
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0%,
+    var(--surface-hover) 20%,
+    var(--bg-tertiary) 40%,
+    var(--bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.8s ease-in-out infinite;
+}
+
 /* Animated gradient border for tool cards */
 @keyframes gradientRotate {
   0% { background-position: 0% 50%; }

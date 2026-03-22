@@ -282,6 +282,24 @@ export default function ToolLayout({
                 <div className={`prose-output whitespace-pre-wrap print-content ${isStreaming ? "streaming-cursor" : ""}`}>
                   {output}
                 </div>
+              ) : isLoading ? (
+                <div className="min-h-[350px] space-y-6 py-4">
+                  <div className="space-y-3">
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '100%' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '80%', animationDelay: '150ms' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '60%', animationDelay: '300ms' }} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '90%', animationDelay: '100ms' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '70%', animationDelay: '250ms' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '50%', animationDelay: '400ms' }} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '95%', animationDelay: '200ms' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '75%', animationDelay: '350ms' }} />
+                    <div className="skeleton-shimmer h-4 rounded-md" style={{ width: '55%', animationDelay: '500ms' }} />
+                  </div>
+                </div>
               ) : (
                 <div className="flex h-full min-h-[350px] flex-col items-center justify-center text-center">
                   <div className={`mb-4 rounded-full p-4 ${toolColor}`} style={{ backgroundColor: 'var(--bg-tertiary)' }}>
