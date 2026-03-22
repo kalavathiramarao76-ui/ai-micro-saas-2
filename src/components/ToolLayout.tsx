@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./Navbar";
-import { incrementUsage } from "@/lib/usage";
 import ToolIcon from "./ToolIcon";
 import SavedList from "./SavedList";
 import FavoriteButton from "./FavoriteButton";
@@ -75,6 +74,14 @@ export default function ToolLayout({
           body: JSON.stringify({ toolType: toolId, input }),
         });
 
+        if (response.status === 429) {
+          const errorData = await response.json();
+          if (errorData.error === "FREE_LIMIT_REACHED") {
+            window.dispatchEvent(new CustomEvent("usage-changed", { detail: errorData.count }));
+            return;
+          }
+        }
+
         if (!response.ok) {
           let errorMsg = "Failed to generate content";
           try {
@@ -121,7 +128,6 @@ export default function ToolLayout({
         }
 
         if (fullText) {
-          incrementUsage();
           const gen = saveGeneration({
             toolType: toolId,
             toolName,
